@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:get/get.dart';
-import 'package:lora_chatting/chat.dart';
+import 'package:lora_chatting/views/chat.dart';
 import 'package:lora_chatting/controller/connectivity.dart';
-import 'package:lora_chatting/model_chat.dart';
+import 'package:lora_chatting/views/list_number.dart';
+import 'package:lora_chatting/views/model_chat.dart';
 import 'package:lora_chatting/models/read_chat.dart';
 
 class ListChat extends StatelessWidget {
@@ -15,6 +16,29 @@ class ListChat extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Text("List Chat"),
+            actions: [
+              GestureDetector(
+                onTap: () {
+                  Get.to(ListNumber());
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.people,
+                      size: 28,
+                    ),
+                    Text(
+                      "Nomor Device",
+                      style: TextStyle(
+                        fontSize: 8,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 15),
+            ],
           ),
           body: Container(
             width: Get.width,

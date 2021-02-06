@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:lora_chatting/connection.dart';
-import 'package:lora_chatting/chat.dart';
+import 'package:lora_chatting/views/connection.dart';
+import 'package:lora_chatting/views/chat.dart';
 import 'package:lora_chatting/controller/connectivity.dart';
 import 'package:lora_chatting/controller/database_creator.dart';
-import 'package:lora_chatting/list_chat.dart';
+import 'package:lora_chatting/views/list_chat.dart';
 import 'package:lora_chatting/models/storage.dart';
 
 void main() async {

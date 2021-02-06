@@ -9,8 +9,9 @@ import 'package:get/get.dart';
 import 'package:lora_chatting/controller/connectivity.dart';
 import 'package:lora_chatting/models/read_chat_details.dart';
 import 'package:lora_chatting/models/storage.dart';
+import 'package:lora_chatting/views/list_number.dart';
 
-import 'models/message.dart';
+import '../models/message.dart';
 
 class ChatPage extends StatefulWidget {
   // final BluetoothDevice server;
@@ -173,8 +174,9 @@ class _ChatPage extends State<ChatPage> {
                         hintText: "Kepada:",
                         suffixIcon: IconButton(
                           icon: Icon(Icons.person),
-                          onPressed: () {
-                            print("Tambah Nomor Telepon");
+                          onPressed: () async {
+                            var kondisi = await Get.to(ListNumber());
+                            print("Adakah : $kondisi");
                           },
                         ),
                         contentPadding:
@@ -281,8 +283,9 @@ class _ChatPage extends State<ChatPage> {
                                     print("Mohon Isi Nomor Terlebih Dahulu");
                                   } else {
                                     // _connect.setNilai(_formNumber.text.trim());
-                                    _connect.addNumber(
-                                        "${_formNumber.text.trim()}");
+                                    // TODO: terdapat add number yang masih statis statusnya
+                                    // _connect.addNumber(
+                                    //     "okee", "${_formNumber.text.trim()}");
                                     _connect.addPesan(_formNumber.text.trim(),
                                         textEditingController.text.trim(), 0);
                                     _sendMessage(
