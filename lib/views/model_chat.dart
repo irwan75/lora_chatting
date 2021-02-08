@@ -26,7 +26,7 @@ class ModelChat extends StatelessWidget {
   bool isDisconnecting = false;
 
   initStateFunction() {
-    BluetoothConnection.toAddress(Storage.getLoginPref()).then((_connection) {
+    BluetoothConnection.toAddress(Storage.getAddressPref()).then((_connection) {
       print('Connected to the device');
       connection = _connection;
       // setState(() {

@@ -11,27 +11,29 @@ class Connectivity extends GetxController {
   String nilai_nilai;
   String number;
 
-  void setNumber(String val) {
-    number = val;
-    update();
-  }
-
-  void setUpdate() {
-    update();
-  }
-
   void setBluetoothDevice(BluetoothDevice device) {
     this.device = device;
   }
 
-  void setNilai(String nilai) {
-    this.nilai_nilai = nilai;
-    update();
+  void refreshConnection() {
+    update(['refreshConnection']);
+  }
+
+  void refreshViewList() {
+    update(['updateViewList']);
+  }
+
+  void refreshMainChat() {
+    update(['mainChat']);
+  }
+
+  void refreshDataNumber() {
+    update(['dataNumber']);
   }
 
   Future<List<ReadChat>> getPesanMain() async {
     final sql =
-        '''SELECT DISTINCT master_number.number, (SELECT DISTINCT chat FROM data_pesan WHERE data_pesan.number=master_number.number ORDER BY data_pesan.id_chat DESC) as chat, (SELECT DISTINCT tanggal FROM data_pesan WHERE data_pesan.number=master_number.number ORDER BY data_pesan.id_chat DESC) as tanggal from master_number, data_pesan''';
+        '''SELECT DISTINCT master_number.nama, master_number.number, (SELECT DISTINCT chat FROM data_pesan WHERE data_pesan.number=master_number.number ORDER BY data_pesan.id_chat DESC) as chat, (SELECT DISTINCT tanggal FROM data_pesan WHERE data_pesan.number=master_number.number ORDER BY data_pesan.id_chat DESC) as tanggal from master_number, data_pesan''';
 
     final data = await db.rawQuery(sql);
 
@@ -40,10 +42,10 @@ class Connectivity extends GetxController {
     for (int i = 0; i < data.length; i++) {
       penyimpanan.add(
         new ReadChat(
-          "${data[i]['number']}",
-          data[i]['chat'],
-          data[i]['tanggal'],
-        ),
+            nama: data[i]['nama'],
+            chat: data[i]['chat'],
+            tanggal: data[i]['tanggal'],
+            number: "${data[i]['number']}"),
       );
     }
 
@@ -122,5 +124,28 @@ class Connectivity extends GetxController {
     }
 
     return penyimpanan;
+  }
+
+  Future<int> deletePesanAll(List<int> kode) async {
+    for (int i = 0; i < kode.length; i++) {
+      final sql = '''DELETE FROM data_pesan
+      WHERE number = ${kode[i]}''';
+
+      await db.rawQuery(sql);
+    }
+
+    return 1;
+  }
+
+  Future<int> checkNumber(int number) async {
+    final sql = '''SELECT number FROM master_number
+      WHERE number = ${number}''';
+
+    final result = await db.rawQuery(sql);
+    if (result[0]['number'] == number) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 }

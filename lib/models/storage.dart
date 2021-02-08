@@ -4,11 +4,11 @@ import 'package:get_storage/get_storage.dart';
 class Storage {
   static GetStorage box = GetStorage();
 
-  static setLoginPref(String value) {
+  static setAddressPref(String value) {
     box.write("address", value);
   }
 
-  static String getLoginPref() {
+  static String getAddressPref() {
     return box.read("address") ?? "0";
   }
 }

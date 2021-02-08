@@ -16,6 +16,8 @@ class ListNumber extends StatelessWidget {
   TextEditingController _formNama = TextEditingController();
   TextEditingController _formNumber = TextEditingController();
 
+  List<int> selectedList = [];
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<NomorDeviceController>(
@@ -23,7 +25,8 @@ class ListNumber extends StatelessWidget {
       builder: (controller) {
         return Scaffold(
           appBar: AppBar(
-            title: Text("Nomor Device"),
+            title: Text((kondisi == 1) ? "Pilih Nomor Tujuan" : "Nomor Device"),
+            automaticallyImplyLeading: (kondisi == 1) ? false : true,
           ),
           body: FutureBuilder<List<ListNomor>>(
             future: Connectivity().getNumberDevice(),
@@ -36,7 +39,13 @@ class ListNumber extends StatelessWidget {
                     return Material(
                       child: InkWell(
                         onTap: () {
-                          Get.back(result: "Siapp");
+                          if (kondisi == 1) {
+                            Map<String, dynamic> _nilai = {
+                              'nama': hasil[index].nama,
+                              'number': hasil[index].number
+                            };
+                            Get.back(result: _nilai);
+                          }
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -96,6 +105,7 @@ class ListNumber extends StatelessWidget {
                       ),
                       SizedBox(height: 15),
                       TextFormField(
+                        maxLength: 20,
                         controller: _formNama,
                         keyboardType: TextInputType.name,
                         decoration: InputDecoration(
@@ -107,6 +117,7 @@ class ListNumber extends StatelessWidget {
                       ),
                       SizedBox(height: 8),
                       TextFormField(
+                        maxLength: 5,
                         keyboardType: TextInputType.number,
                         controller: _formNumber,
                         decoration: InputDecoration(

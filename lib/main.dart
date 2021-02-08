@@ -6,8 +6,10 @@ import 'package:lora_chatting/views/connection.dart';
 import 'package:lora_chatting/views/chat.dart';
 import 'package:lora_chatting/controller/connectivity.dart';
 import 'package:lora_chatting/controller/database_creator.dart';
+import 'package:lora_chatting/views/home.dart';
 import 'package:lora_chatting/views/list_chat.dart';
 import 'package:lora_chatting/models/storage.dart';
+import 'package:lora_chatting/views/list_connection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,8 +19,21 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  List<BluetoothDevice> device = [];
+
+  Future getDevices() async {
+    await FlutterBluetoothSerial.instance
+        .getBondedDevices()
+        .then((List<BluetoothDevice> bondedDevices) {
+      for (int i = 0; i < bondedDevices.length; i++) {
+        device.add(bondedDevices[i]);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    getDevices();
     return GetMaterialApp(
       getPages: [
         GetPage(name: '/list_chat', page: () => ListChat()),
@@ -32,31 +47,13 @@ class MyApp extends StatelessWidget {
         future: FlutterBluetoothSerial.instance.requestEnable(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Scaffold(
-              appBar: AppBar(
-                title: Text("LoRa Chatting"),
-              ),
-              body: Container(
-                height: double.infinity,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.bluetooth_disabled,
-                        size: 200.0,
-                        color: Colors.blue,
-                      ),
-                      Text("Bluetooth Tidak Aktif"),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          } else if (snapshot.connectionState == ConnectionState.none) {
             return Home();
           } else {
-            return Home();
+            if (snapshot.data) {
+              return ListConnection(device: device);
+            } else {
+              return Home();
+            }
           }
         },
       ),
@@ -64,41 +61,33 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class Home extends StatelessWidget {
-  // final Connectivity _connect = Get.put(Connectivity());
-
-  @override
-  Widget build(BuildContext context) {
-    // Connectivity().addNumber("2837928");
-    // Connectivity().addNumber("1236781");
-    // for (int i = 0; i < 4; i++) {
-    //   Connectivity().addPesan("2837928", "saddsa $i", 1);
-    //   Connectivity().addPesan("1236781", "sada $i", 0);
-    // }
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Connection'),
-        ),
-        body: SelectBondedDevicePage(
-          onCahtPage: (device1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  BluetoothDevice _bluetoothDevice = device1;
-                  Storage.setLoginPref(_bluetoothDevice.address);
-                  // _connect.setBluetoothDevice(device1);
-                  return ListChat();
-                  // return ChatPage(
-                  //   server: device,
-                  // );
-                },
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
+// class Home extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return SafeArea(
+//       child: Scaffold(
+//         appBar: AppBar(
+//           title: Text('Connection'),
+//         ),
+//         body: SelectBondedDevicePage(
+//           onCahtPage: (device1) {
+//             Navigator.push(
+//               context,
+//               MaterialPageRoute(
+//                 builder: (context) {
+//                   BluetoothDevice _bluetoothDevice = device1;
+//                   Storage.setLoginPref(_bluetoothDevice.address);
+//                   // _connect.setBluetoothDevice(device1);
+//                   return ListChat();
+//                   // return ChatPage(
+//                   //   server: device,
+//                   // );
+//                 },
+//               ),
+//             );
+//           },
+//         ),
+//       ),
+//     );
+//   }
+// }

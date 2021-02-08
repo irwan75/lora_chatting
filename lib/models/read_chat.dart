@@ -1,15 +1,20 @@
+import 'dart:convert';
+
 class ReadChat {
+  String nama;
   String number;
   String chat;
   String tanggal;
-  ReadChat(
+  ReadChat({
+    this.nama,
     this.number,
     this.chat,
     this.tanggal,
-  );
+  });
 
   Map<String, dynamic> toMap() {
     return {
+      'nama': nama,
       'number': number,
       'chat': chat,
       'tanggal': tanggal,
@@ -20,9 +25,15 @@ class ReadChat {
     if (map == null) return null;
 
     return ReadChat(
-      map['number'],
-      map['chat'],
-      map['tanggal'],
+      nama: map['nama'],
+      number: map['number'],
+      chat: map['chat'],
+      tanggal: map['tanggal'],
     );
   }
+
+  String toJson() => json.encode(toMap());
+
+  factory ReadChat.fromJson(String source) =>
+      ReadChat.fromMap(json.decode(source));
 }
